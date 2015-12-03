@@ -4,36 +4,50 @@ public static LinkedListNode merge_sort(LinkedListNode head){
 
   if (head == null || head.next == null) return head;
 
-  LinkedListNode[] new_head = split(head);
+  Pair<LinkedListNode, LinkedListNode> pair = new Pair<LinkedListNode, LinkedListNode>(null, null);
 
-  return merge_two(merge_sort(new_head[0]), merge_sort(new_head[1]));
+  split(head, pair);
 
+  pair.first = merge_sort(pair.first);
+  pair.second = merge_sort(pair.second);
+
+  return merge_two(pair.first, pair.second);
 }
 
 // helper method
 public static LinkedListNode merge_two(LinkedListNode head1, LinkedListNode head2){
-  LinkedListNode new_head = null;
-  LinkedListNode new_curr = null;
+
+  if (head1 == null){
+    return head2;
+  }else if (head2 == null){
+    return head1;
+  }
+
+  LinkedListNode new_head;
+
+  if (head1.data <= head2.data){
+    new_head = head1;
+    head1 = head1.next;
+  }else{
+    new_head = head2;
+    head2 = head2.next;
+  }
+
+  LinkedListNode new_curr = new_head;
 
   while (head1 != null && head2 != null){
     LinkedListNode temp = null;
 
-    if (head1.data < head2.data){
-      temp = new LinkedListNode(head1.data, null);
+    if (head1.data <= head2.data){
+      temp = head1;
       head1 = head1.next;
     }else{
-      temp = new LinkedListNode(head2.data, null);
+      temp = head2;
       head2 = head2.next;
     }
 
-    if (new_head == null){
-      new_head = temp;
-      new_curr = temp;
-    }else{
-      new_curr.next = temp;
-    }
+    new_curr.next = temp;
     new_curr = temp;
-
   }
 
   if (head1 == null){
@@ -46,39 +60,31 @@ public static LinkedListNode merge_two(LinkedListNode head1, LinkedListNode head
   return new_head;
 }
 
-public static LinkedListNode[] split(LinkedListNode head){
-  LinkedListNode[] result = new LinkedListNode[2];
+public static void split(LinkedListNode head, Pair<LinkedListNode, LinkedListNode> pair){
+  if (head == nul) return;
 
-  int n = length(head);
+  if (head.next = null){
+    pair.first = head;
+    pair.second = null;
+  }else{
+    LinkedListNode slow, fast;
+    slow = head;
+    fast = head.next;
 
-  LinkedListNode current = null;
+    while (fast != null) {
+      fast = fast.next;
 
-  for (int i = 0; i < (n/2); i++){
-    LinkedListNode temp = new LinkedListNode(head.data, null);
-    if (result[0] == null){
-      result[0] = temp;
-    }else{
-      current.next = temp;
+      if (fast != null){
+        fast = fast.next;
+        slow = slow.next;
+      }
     }
 
-    current = temp;
-    head = head.next;
+    pair.first = head;
+    pair.second = slow.next;
+
+    slow.next = null;
   }
-
-  current = null;
-  for (int i = (count/2); i < count; i++){
-    LinkedListNode temp = new LinkedListNode(head.data, null);
-    if (result[1] == null){
-      result[1] = temp;
-    }else{
-      current.next = temp;
-    }
-
-    current = temp;
-    head = head.next;
-  }
-
-  return result;
 }
 
 public static int length(LinkedListNode head){
