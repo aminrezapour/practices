@@ -1,7 +1,8 @@
 // given a head and a data k, delete the node with this value
 
 public static LinkedListNode delete_node(LinkedListNode head, int k){
-  if (head == null || head.data == k) return null;
+  if (head == null) return head;
+  if (head.data == k) return head.next;
 
   LinkedListNode previous = head;
   LinkedListNode current = head.next;
